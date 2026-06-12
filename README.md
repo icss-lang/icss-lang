@@ -172,7 +172,7 @@ make node/icss-lang.test
 make node/vite-plugin.test
 
 # Package the VS Code extension
-make icss-language.vsix
+make icss-lang.vsix
 ```
 
 ---

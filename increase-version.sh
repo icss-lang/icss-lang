@@ -58,6 +58,12 @@ read_cargo_version() {
   node -e 'const fs = require("fs"); const m = fs.readFileSync(process.argv[1], "utf8").match(/^version\s*=\s*"([^"]+)"/m); console.log(m ? m[1] : "");' "$file"
 }
 
+# Function to read Cargo.toml name
+read_cargo_name() {
+  local file=$1
+  node -e 'const fs = require("fs"); const m = fs.readFileSync(process.argv[1], "utf8").match(/^name\s*=\s*"([^"]+)"/m); console.log(m ? m[1] : "");' "$file"
+}
+
 # Function to write Cargo.toml version
 write_cargo_version() {
   local file=$1
@@ -77,6 +83,12 @@ write_cargo_version() {
 read_npm_version() {
   local file=$1
   node -e 'const fs = require("fs"); const m = fs.readFileSync(process.argv[1], "utf8").match(/"version"\s*:\s*"([^"]+)"/); console.log(m ? m[1] : "");' "$file"
+}
+
+# Function to read package.json name
+read_npm_name() {
+  local file=$1
+  node -e 'const fs = require("fs"); const m = fs.readFileSync(process.argv[1], "utf8").match(/"name"\s*:\s*"([^"]+)"/); console.log(m ? m[1] : "");' "$file"
 }
 
 # Function to write package.json version
@@ -105,6 +117,12 @@ should_bump() {
   return 1
 }
 
+# Get package names dynamically for logging
+NAME_ICSS_RS="icss-lang.rs"
+NAME_NODE_ICSS_LANG=$(read_npm_name "node/icss-lang/package.json")
+NAME_NODE_VITE_PLUGIN=$(read_npm_name "node/vite-plugin/package.json")
+NAME_VSCODE="icss-lang.vsix"
+
 # Change tracker for the summary
 SUMMARY=""
 add_summary() {
@@ -118,20 +136,30 @@ echo "Version level: $VERSION_LEVEL"
 echo "Projects to update: $PROJECTS"
 echo "----------------------------------------"
 
+# Block separator utility for clean output
+WAS_PRINTED=false
+print_block_separator() {
+  if [ "$WAS_PRINTED" = "true" ]; then
+    echo ""
+  fi
+  WAS_PRINTED=true
+}
+
 # 1. Update icss-rs
 if should_bump "icss-rs"; then
+  print_block_separator
   CARGO_FILE="icss-rs/Cargo.toml"
   OLD_VER=$(read_cargo_version "$CARGO_FILE")
   NEW_VER=$(increment_version "$OLD_VER" "$VERSION_LEVEL")
-  echo "Bumping icss-rs: $OLD_VER -> $NEW_VER"
-  add_summary "  - icss-rs: $OLD_VER -> $NEW_VER"
+  echo "Bumping $NAME_ICSS_RS: $OLD_VER -> $NEW_VER"
+  add_summary "  - $NAME_ICSS_RS: $OLD_VER -> $NEW_VER"
   write_cargo_version "$CARGO_FILE" "$NEW_VER"
   
   # Update dependency in node/icss-lang/Cargo.toml
   WRAPPER_CARGO="node/icss-lang/Cargo.toml"
   if [ -f "$WRAPPER_CARGO" ]; then
-    echo "  Updating dependency reference icss-lang -> $NEW_VER in $WRAPPER_CARGO"
-    add_summary "    ↳ node/icss-lang dependency: icss-lang -> $NEW_VER"
+    echo "  Updating dependency reference $NAME_ICSS_RS -> $NEW_VER in $NAME_NODE_ICSS_LANG"
+    add_summary "    ↳ $NAME_NODE_ICSS_LANG dependency: $NAME_ICSS_RS -> $NEW_VER"
     if [ "$DRY_RUN" != "true" ]; then
       node -e '
         const fs = require("fs");
@@ -145,14 +173,15 @@ fi
 
 # 2. Update node/icss-lang
 if should_bump "node/icss-lang"; then
+  print_block_separator
   NPM_FILE="node/icss-lang/package.json"
   CARGO_FILE="node/icss-lang/Cargo.toml"
   
   # Update package.json version
   OLD_VER=$(read_npm_version "$NPM_FILE")
   NEW_VER=$(increment_version "$OLD_VER" "$VERSION_LEVEL")
-  echo "Bumping node/icss-lang (npm): $OLD_VER -> $NEW_VER"
-  add_summary "  - node/icss-lang (npm): $OLD_VER -> $NEW_VER"
+  echo "Bumping $NAME_NODE_ICSS_LANG: $OLD_VER -> $NEW_VER"
+  add_summary "  - $NAME_NODE_ICSS_LANG: $OLD_VER -> $NEW_VER"
   write_npm_version "$NPM_FILE" "$NEW_VER"
   
   # Also keep the wrapper Cargo.toml version in sync
@@ -160,15 +189,15 @@ if should_bump "node/icss-lang"; then
     OLD_CARGO_VER=$(read_cargo_version "$CARGO_FILE")
     NEW_CARGO_VER=$(increment_version "$OLD_CARGO_VER" "$VERSION_LEVEL")
     echo "  Syncing Cargo.toml version for wrapper: $OLD_CARGO_VER -> $NEW_CARGO_VER"
-    add_summary "    ↳ node/icss-lang wrapper (Cargo.toml): $OLD_CARGO_VER -> $NEW_CARGO_VER"
+    add_summary "    ↳ $NAME_NODE_ICSS_LANG wrapper (Cargo.toml): $OLD_CARGO_VER -> $NEW_CARGO_VER"
     write_cargo_version "$CARGO_FILE" "$NEW_CARGO_VER"
   fi
   
   # Update dependency in node/vite-plugin/package.json
   VITE_PKG="node/vite-plugin/package.json"
   if [ -f "$VITE_PKG" ]; then
-    echo "  Updating dependency reference @icss-lang/node -> ^$NEW_VER in $VITE_PKG"
-    add_summary "    ↳ node/vite-plugin dependency: @icss-lang/node -> ^$NEW_VER"
+    echo "  Updating dependency reference $NAME_NODE_ICSS_LANG -> ^$NEW_VER in $NAME_NODE_VITE_PLUGIN"
+    add_summary "    ↳ $NAME_NODE_VITE_PLUGIN dependency: $NAME_NODE_ICSS_LANG -> ^$NEW_VER"
     if [ "$DRY_RUN" != "true" ]; then
       node -e '
         const fs = require("fs");
@@ -182,21 +211,23 @@ fi
 
 # 3. Update node/vite-plugin
 if should_bump "node/vite-plugin"; then
+  print_block_separator
   NPM_FILE="node/vite-plugin/package.json"
   OLD_VER=$(read_npm_version "$NPM_FILE")
   NEW_VER=$(increment_version "$OLD_VER" "$VERSION_LEVEL")
-  echo "Bumping node/vite-plugin: $OLD_VER -> $NEW_VER"
-  add_summary "  - node/vite-plugin: $OLD_VER -> $NEW_VER"
+  echo "Bumping $NAME_NODE_VITE_PLUGIN: $OLD_VER -> $NEW_VER"
+  add_summary "  - $NAME_NODE_VITE_PLUGIN: $OLD_VER -> $NEW_VER"
   write_npm_version "$NPM_FILE" "$NEW_VER"
 fi
 
 # 4. Update vscode
 if should_bump "vscode"; then
+  print_block_separator
   NPM_FILE="vscode/package.json"
   OLD_VER=$(read_npm_version "$NPM_FILE")
   NEW_VER=$(increment_version "$OLD_VER" "$VERSION_LEVEL")
-  echo "Bumping vscode: $OLD_VER -> $NEW_VER"
-  add_summary "  - vscode: $OLD_VER -> $NEW_VER"
+  echo "Bumping $NAME_VSCODE: $OLD_VER -> $NEW_VER"
+  add_summary "  - $NAME_VSCODE: $OLD_VER -> $NEW_VER"
   write_npm_version "$NPM_FILE" "$NEW_VER"
 fi
 
