@@ -27,6 +27,7 @@ if [ -z "$PROJECTS" ]; then
 fi
 DRY_RUN=false
 CONFIRM=false
+CHECK_LOGINS=false
 
 # Parse arguments
 for arg in "$@"; do
@@ -37,11 +38,49 @@ for arg in "$@"; do
     --confirm)
       CONFIRM=true
       ;;
+    --check-logins)
+      CHECK_LOGINS=true
+      ;;
     *)
       # Ignore other arguments
       ;;
   esac
 done
+# Auto-enable check-logins when confirming
+if [ "$CONFIRM" = "true" ] && [ -z "$CHECK_LOGINS" ]; then
+  CHECK_LOGINS=true
+fi
+
+# Verify required logins before proceeding
+if [ "$CHECK_LOGINS" = "true" ]; then
+  MISSING=0
+  MESSAGES=""
+  # Cargo login check
+  if echo "$PROJECTS" | grep -q "icss-rs"; then
+    if [ ! -f "$HOME/.cargo/credentials.toml" ]; then
+      MESSAGES+="\n-  Cargo not logged in. Run 'cargo login'\n"
+      MISSING=1
+    fi
+  fi
+  # npm login check
+  if echo "$PROJECTS" | grep -q "node/"; then
+    if ! npm whoami >/dev/null 2>&1; then
+      MESSAGES+="\n- npm not logged in. Run 'npm login'\n"
+      MISSING=1
+    fi
+  fi
+  # vsce login check
+  if echo "$PROJECTS" | grep -q "vscode"; then
+    if ! vsce ls-publishers >/dev/null 2>&1; then
+      MESSAGES+="\n- vsce not logged in. Run 'npx vsce login <publisher>'\n"
+      MISSING=1
+    fi
+  fi
+  if [ $MISSING -eq 1 ]; then
+    echo -e "\nErrors:\n$MESSAGES\n"
+    exit 1
+  fi
+fi
 
 # Ensure either --confirm or --dry-run is specified
 if [ "$DRY_RUN" = "false" ] && [ "$CONFIRM" = "false" ]; then
@@ -54,7 +93,6 @@ if [ "$DRY_RUN" = "true" ] && [ "$CONFIRM" = "true" ]; then
   echo "Error: --confirm and --dry-run are mutually exclusive. Choose only one."
   exit 1
 fi
-
 # Helper to check if project is in the list
 should_publish() {
   local proj=$1

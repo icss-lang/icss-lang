@@ -1,8 +1,8 @@
 {
   "name": "icss-lang",
   "publisher": "jgermade",
-  "displayName": "Indented CSS (.icss)",
-  "description": "Syntax highlighting for the Indented CSS language (.icss)",
+  "displayName": "Indented CSS",
+  "description": "Syntax highlighting for the Indented CSS language (.icss - .cssi)",
   "repository": "https://github.com/icss-lang/icss-lang",
   "icon": "icons/png/icon_128.png",
   "version": "0.1.0",

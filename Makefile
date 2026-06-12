@@ -16,7 +16,8 @@ icss-rs.wasm:
 	cd icss-rs && wasm-pack build --target nodejs
 
 icss-lang.vsix:
-	cd vscode && npx vsce package
+	mkdir -p dist/
+	cd vscode && npx vsce package --out ../dist/
 
 node/vite-plugin.test:
 	cd node/vite-plugin && npm test
