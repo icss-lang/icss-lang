@@ -40,4 +40,62 @@ body
     expect(result.code).toContain('background: blue;');
     expect(result.code).toContain("document.createElement('style')");
   });
+
+  // --- Tagged template literal tests ---
+
+  it('should transform icss tagged template literals in .js files', () => {
+    const plugin = indentedCSS();
+    const src = `
+import { icss } from '@icss-lang/vite-plugin/client';
+const css = icss\`
+body
+  color: red
+  background: blue
+\`;
+`;
+    const result = plugin.transform(src, 'component.js');
+    expect(result).toBeDefined();
+    expect(result.code).toContain('color: red;');
+    expect(result.code).toContain('background: blue;');
+    // The tag call should be replaced with a plain string literal
+    expect(result.code).not.toContain('icss`');
+  });
+
+  it('should transform icss tagged template literals in .ts files', () => {
+    const plugin = indentedCSS();
+    const src = `const css = icss\`body\n  color: red\n\`;`;
+    const result = plugin.transform(src, 'component.ts');
+    expect(result).toBeDefined();
+    expect(result.code).toContain('color: red;');
+    expect(result.code).not.toContain('icss`');
+  });
+
+  it('should leave JS files without icss template literals untouched', () => {
+    const plugin = indentedCSS();
+    const src = `const x = 42;`;
+    const result = plugin.transform(src, 'util.js');
+    expect(result).toBeUndefined();
+  });
+
+  it('should handle multiple icss template literals in a single file', () => {
+    const plugin = indentedCSS();
+    const src = [
+      `const a = icss\`body\n  color: red\n\`;`,
+      `const b = icss\`h1\n  font-size: 2rem\n\`;`,
+    ].join('\n');
+    const result = plugin.transform(src, 'multi.js');
+    expect(result).toBeDefined();
+    expect(result.code).toContain('color: red;');
+    expect(result.code).toContain('font-size: 2rem;');
+    expect(result.code).not.toContain('icss`');
+  });
+
+  it('should transform cssi tagged template literals', () => {
+    const plugin = indentedCSS();
+    const src = `const css = cssi\`body\n  color: blue\n\`;`;
+    const result = plugin.transform(src, 'component.js');
+    expect(result).toBeDefined();
+    expect(result.code).toContain('color: blue;');
+    expect(result.code).not.toContain('cssi`');
+  });
 });

@@ -8,6 +8,16 @@
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./index.d.ts"
+    },
+    "./client": {
+      "import": "./client.js",
+      "types": "./client.d.ts"
+    }
+  },
   "scripts": {
     "test": "vitest run"
   },

@@ -1,15 +1,17 @@
 {
-  "$schema": "http://json-schema.org/schema#",
-  "id": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "$ref": "#/definitions/root",
   "definitions": {
     "root": {
       "allOf": [
-        { "$ref": "#/definitions/grammar" },
+        {
+          "$ref": "#/definitions/grammar"
+        },
         {
           "type": "object",
           "properties": {
-            "name": { "type": "string" },
+            "name": {
+              "type": "string"
+            },
             "scopeName": {
               "description": "this should be a unique name for the grammar, following the convention of being a dot-separated name where each new (left-most) part specializes the name. Normally it would be a two-part name where the first is either text or source and the second is the name of the language or document type. But if you are specializing an existing type, you probably want to derive the name from the type you are specializing. For example Markdown is text.html.markdown and Ruby on Rails (rhtml files) is text.html.rails. The advantage of deriving it from (in this case) text.html is that everything which works in the text.html scope will also work in the text.html.«something» scope (but with a lower precedence than something specifically targeting text.html.«something»).",
               "type": "string",
@@ -26,12 +28,20 @@
             "fileTypes": {
               "description": "this is an array of file type extensions that the grammar should (by default) be used with. This is referenced when TextMate does not know what grammar to use for a file the user opens. If however the user selects a grammar from the language pop-up in the status bar, TextMate will remember that choice.",
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             },
-            "uuid": { "type": "string" },
-            "firstLineMatch": { "type": "string" }
+            "uuid": {
+              "type": "string"
+            },
+            "firstLineMatch": {
+              "type": "string"
+            }
           },
-          "required": [ "scopeName" ]
+          "required": [
+            "scopeName"
+          ]
         }
       ]
     },
@@ -40,11 +50,85 @@
       "properties": {
         "patterns": {
           "type": "array",
-          "items": { "$ref": "#/definitions/pattern" },
+          "items": {
+            "$ref": "#/definitions/pattern"
+          },
           "default": []
         },
         "repository": {
-          "description": "a dictionary (i.e. key/"
+          "description": "a dictionary (i.e. key/value pairs) of rules which can be included from other places in the grammar. The key is the name of the rule and the value is the actual rule. Further explanation of how to include rules is found in the next section.",
+          "additionalProperties": {
+            "$ref": "#/definitions/pattern"
+          }
+        }
+      }
+    },
+    "captures": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/pattern"
+      }
+    },
+    "pattern": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "include": {
+          "type": "string"
+        },
+        "match": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "contentName": {
+          "type": "string"
+        },
+        "begin": {
+          "type": "string"
+        },
+        "end": {
+          "type": "string"
+        },
+        "while": {
+          "type": "string"
+        },
+        "applyEndPatternLast": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "patterns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pattern"
+          }
+        },
+        "captures": {
+          "$ref": "#/definitions/captures"
+        },
+        "beginCaptures": {
+          "$ref": "#/definitions/captures"
+        },
+        "endCaptures": {
+          "$ref": "#/definitions/captures"
+        },
+        "whileCaptures": {
+          "$ref": "#/definitions/captures"
+        },
+        "repository": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/pattern"
+          }
         }
       }
     }
