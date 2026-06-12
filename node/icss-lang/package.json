@@ -1,10 +1,18 @@
 {
   "name": "@icss-lang/node",
-  "version": "0.1.0",
+  "version": "0.1.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Indented CSS parser and compiler for Node.js",
   "type": "module",
   "main": "./index.js",
   "types": "./index.d.ts",
+  "files": [
+    "pkg",
+    "index.js",
+    "index.d.ts"
+  ],
   "scripts": {
     "pretest": "./scripts/wasm-build.sh",
     "test": "vitest run",

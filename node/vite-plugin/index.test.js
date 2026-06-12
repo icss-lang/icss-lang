@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import indentedCSS from './index.js';
+import { indentedCSS } from './index.js';
 
 describe('vite-plugin-icss', () => {
   it('should have the correct name and enforce properties', () => {

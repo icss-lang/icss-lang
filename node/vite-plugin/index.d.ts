@@ -1,3 +1,3 @@
 import type { Plugin } from 'vite';
 
-export default function indentedCSS(): Plugin;
+export function indentedCSS(): Plugin;

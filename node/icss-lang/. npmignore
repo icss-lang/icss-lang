@@ -1,0 +1,12 @@
+node_modules/
+src/
+scripts/
+target/
+Cargo.toml
+Cargo.lock
+*.test.js
+*.spec.js
+coverage/
+.github/
+.vscode/
+.DS_Store
