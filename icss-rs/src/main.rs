@@ -1,4 +1,4 @@
-use indented_css::Compiler;
+use icss_lang::Compiler;
 use std::env;
 use std::fs;
 use std::process;

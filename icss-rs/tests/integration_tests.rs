@@ -1,6 +1,6 @@
 use std::fs;
 use std::path::PathBuf;
-use indented_css::Compiler;
+use icss_lang::Compiler;
 
 fn compile_sample(filename: &str) {
     let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));

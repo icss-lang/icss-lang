@@ -1,6 +1,6 @@
-import { compile_icss } from '../icss-rs/pkg/indented_css.js';
+import { compile_icss } from 'icss-lang';
 
-export default function indentedCssPlugin() {
+export default function indentedCSS() {
   return {
     name: 'vite-plugin-icss',
     enforce: 'pre',

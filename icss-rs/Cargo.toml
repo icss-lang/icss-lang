@@ -1,7 +1,10 @@
 [package]
-name = "indented-css"
+name = "icss-lang"
 version = "0.1.0"
 edition = "2024"
+description = "Indented CSS parser and compiler"
+license = "MIT"
+repository = "https://github.com/icss-lang/icss-lang"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

@@ -1,14 +1,13 @@
 {
-  "name": "vite-plugin-icss",
+  "name": "icss-lang",
   "version": "1.0.0",
-  "type": "module",
   "description": "",
   "main": "index.js",
-  "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "type": "commonjs"
 }
