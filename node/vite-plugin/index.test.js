@@ -1,40 +1,43 @@
 import { describe, it, expect } from 'vitest';
-import { indentedCSS } from './index.js';
+import { icss as icssPlugin } from './index.js';
 
 describe('vite-plugin-icss', () => {
   it('should have the correct name and enforce properties', () => {
-    const plugin = indentedCSS();
+    const plugin = icssPlugin();
     expect(plugin.name).toBe('vite-plugin-icss');
     expect(plugin.enforce).toBe('pre');
   });
 
   it('should ignore non-indented CSS files', () => {
-    const plugin = indentedCSS();
+    const plugin = icssPlugin();
     const result = plugin.transform('body { color: red; }', 'style.css');
     expect(result).toBeUndefined();
   });
 
   it('should transform .cssi files', () => {
-    const plugin = indentedCSS();
-    const src = icss`
+    const plugin = icssPlugin();
+    const src = `
 body
   color: red
   background: blue
 `;
-    const result = plugin.transform(src, 'style.cssi');
+    // Mock the context so this.error works
+    const context = { error: (msg) => { throw new Error(msg); } };
+    const result = plugin.transform.call(context, src, 'style.cssi');
     expect(result).toBeDefined();
     expect(result.code).toContain('color: red;');
     expect(result.code).toContain('background: blue;');
   });
 
   it('should transform .icss files', () => {
-    const plugin = indentedCSS();
-    const src = cssi`
+    const plugin = icssPlugin();
+    const src = `
 body
   color: red
   background: blue
 `;
-    const result = plugin.transform(src, 'style.icss');
+    const context = { error: (msg) => { throw new Error(msg); } };
+    const result = plugin.transform.call(context, src, 'style.icss');
     expect(result).toBeDefined();
     expect(result.code).toContain('color: red;');
     expect(result.code).toContain('background: blue;');
@@ -44,8 +47,8 @@ body
   // --- Tagged template literal tests ---
 
   it('should transform icss tagged template literals in .js files', () => {
-    const plugin = indentedCSS();
-    const src = icss`
+    const plugin = icssPlugin();
+    const src = `
 import { icss } from '@icss-lang/vite-plugin/client';
 const css = icss\`
 body
@@ -62,8 +65,8 @@ body
   });
 
   it('should transform icss tagged template literals in .ts files', () => {
-    const plugin = indentedCSS();
-    const src = icss`const css = icss\`body\n  color: red\n\`;`;
+    const plugin = icssPlugin();
+    const src = `const css = icss\`body\n  color: red\n\`;`;
     const result = plugin.transform(src, 'component.ts');
     expect(result).toBeDefined();
     expect(result.code).toContain('color: red;');
@@ -71,14 +74,14 @@ body
   });
 
   it('should leave JS files without icss template literals untouched', () => {
-    const plugin = indentedCSS();
-    const src = icss`const x = 42;`;
+    const plugin = icssPlugin();
+    const src = `const x = 42;`;
     const result = plugin.transform(src, 'util.js');
     expect(result).toBeUndefined();
   });
 
   it('should handle multiple icss template literals in a single file', () => {
-    const plugin = indentedCSS();
+    const plugin = icssPlugin();
     const src = [
       `const a = icss\`body\n  color: red\n\`;`,
       `const b = icss\`h1\n  font-size: 2rem\n\`;`,
@@ -91,8 +94,8 @@ body
   });
 
   it('should transform cssi tagged template literals', () => {
-    const plugin = indentedCSS();
-    const src = icss`const css = cssi\`body\n  color: blue\n\`;`;
+    const plugin = icssPlugin();
+    const src = `const css = cssi\`body\n  color: blue\n\`;`;
     const result = plugin.transform(src, 'component.js');
     expect(result).toBeDefined();
     expect(result.code).toContain('color: blue;');

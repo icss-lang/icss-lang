@@ -1,3 +1,4 @@
+/// <reference path="./client.d.ts" />
 import type { Plugin } from 'vite';
 
-export function indentedCSS(): Plugin;
+export function icss(): Plugin;

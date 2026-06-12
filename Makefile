@@ -15,6 +15,7 @@ icss-rs:
 icss-rs.wasm:
 	cd icss-rs && wasm-pack build --target nodejs
 
+vsix: icss-lang.vsix
 icss-lang.vsix:
 	mkdir -p dist/
 	cd vscode && npx vsce package --out ../dist/

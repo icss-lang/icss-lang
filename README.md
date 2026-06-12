@@ -140,11 +140,11 @@ Add it to your `vite.config.js` or `vite.config.ts`:
 
 ```javascript
 import { defineConfig } from 'vite';
-import { indentedCSS } from '@icss-lang/vite-plugin';
+import { icss } from '@icss-lang/vite-plugin';
 
 export default defineConfig({
   plugins: [
-    indentedCSS()
+    icss()
   ]
 });
 ```

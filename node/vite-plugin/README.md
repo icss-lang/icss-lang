@@ -15,11 +15,35 @@ The plugin imports the WebAssembly build of the Rust engine (`icss-rs`) and regi
    ```
 2. Include the plugin in your `vite.config.js` or `vite.config.ts`:
    ```javascript
-   import indentedCssPlugin from 'indented-css-vite';
+   import { icss } from '@icss-lang/vite-plugin';
 
    export default {
      plugins: [
-       indentedCssPlugin()
+       icss()
      ]
    }
    ```
+
+## TypeScript Setup
+
+If you are using TypeScript and importing `.icss` or `.cssi` files directly in your code, TypeScript may complain about missing module declarations.
+
+To fix this, you can reference the types provided by this plugin. Add the following to your `vite-env.d.ts` or `app.d.ts`:
+
+```typescript
+/// <reference types="@icss-lang/vite-plugin/client" />
+```
+
+Alternatively, you can manually declare the modules in your project's `d.ts` files:
+
+```typescript
+declare module '*.icss' {
+  const content: string;
+  export default content;
+}
+
+declare module '*.cssi' {
+  const content: string;
+  export default content;
+}
+```

@@ -4,7 +4,7 @@ import { compile_icss } from '@icss-lang/node';
 // Group 1: the raw template content (no expressions supported)
 const ICSS_TAG_RE = /\b(?:icss|cssi)`((?:[^`\\]|\\.)*)`/gs;
 
-export function indentedCSS() {
+export function icss() {
   return {
     name: 'vite-plugin-icss',
     enforce: 'pre',
