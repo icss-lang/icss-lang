@@ -20,19 +20,19 @@
 		<!-- 'css' text (Left portion) -->
 		<g stroke="#ebebeb">
 			<!-- Letter 'c' -->
-			<path d="M 202 119 A 65 65 0 1 0 202 211" />
+			<path d="M 202 104 A 65 65 0 1 0 202 196" />
 			<!-- Letter 's' -->
-			<path d="M 282 115 A 30 30 0 0 0 230 130 C 230 160 282 170 282 200 A 30 30 0 0 1 230 215" />
+			<path d="M 288 100 A 30 30 0 0 0 232 115 C 232 145 292 155 292 185 A 30 30 0 0 1 236 200" />
 			<!-- Letter 's' -->
-			<path d="M 382 115 A 30 30 0 0 0 330 130 C 330 160 382 170 382 200 A 30 30 0 0 1 330 215" />
+			<path d="M 378 100 A 30 30 0 0 0 322 115 C 322 145 382 155 382 185 A 30 30 0 0 1 326 200" />
 		</g>
 		<!-- Tab Symbol (Left portion) - Deep Matte Black -->
 		<g stroke="#1a1a1a">
 			<!-- Vertical Bar -->
-			<path d="M 360 260 L 360 410" />
+			<path d="M 375 260 L 375 410" />
 			<!-- Arrow Shaft and Head -->
-			<path d="M 141 335 L 316 335" />
-			<path d="M 266 285 L 316 335 L 266 385" />
+			<path d="M 120 335 L 331 335" />
+			<path d="M 281 285 L 331 335 L 281 385" />
 		</g>
 	</g>
 
@@ -41,19 +41,19 @@
 		<!-- 'css' text (Right portion) -->
 		<g stroke="#ffffff">
 			<!-- Letter 'c' -->
-			<path d="M 202 119 A 65 65 0 1 0 202 211" />
+			<path d="M 202 104 A 65 65 0 1 0 202 196" />
 			<!-- Letter 's' -->
-			<path d="M 282 115 A 30 30 0 0 0 230 130 C 230 160 282 170 282 200 A 30 30 0 0 1 230 215" />
+			<path d="M 288 100 A 30 30 0 0 0 232 115 C 232 145 292 155 292 185 A 30 30 0 0 1 236 200" />
 			<!-- Letter 's' -->
-			<path d="M 382 115 A 30 30 0 0 0 330 130 C 330 160 382 170 382 200 A 30 30 0 0 1 330 215" />
+			<path d="M 378 100 A 30 30 0 0 0 322 115 C 322 145 382 155 382 185 A 30 30 0 0 1 326 200" />
 		</g>
 		<!-- Tab Symbol (Right portion) - Charcoal Black -->
 		<g stroke="#3b3b3b">
 			<!-- Vertical Bar -->
-			<path d="M 360 260 L 360 410" />
+			<path d="M 375 260 L 375 410" />
 			<!-- Arrow Shaft and Head -->
-			<path d="M 141 335 L 316 335" />
-			<path d="M 266 285 L 316 335 L 266 385" />
+			<path d="M 120 335 L 331 335" />
+			<path d="M 281 285 L 331 335 L 281 385" />
 		</g>
 	</g>
 </svg>
