@@ -5,7 +5,7 @@
   "description": "Syntax highlighting for the Indented CSS language (.icss - .cssi)",
   "repository": "https://github.com/icss-lang/icss-lang",
   "icon": "icons/png/icon_128.png",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "engines": {
     "vscode": "^1.80.0"
   },

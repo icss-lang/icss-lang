@@ -1,11 +1,11 @@
 [package]
 name = "icss-node-wrapper"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-icss-lang = { path = "../../icss-rs", version = "0.1.0" }
+icss-lang = { path = "../../icss-rs", version = "0.1.1" }
 wasm-bindgen = "0.2"
