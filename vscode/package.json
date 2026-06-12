@@ -1,0 +1,34 @@
+{
+  "name": "icss-language",
+  "publisher": "doomus",
+  "displayName": "Indented CSS (.icss)",
+  "description": "Syntax highlighting for the Indented CSS language (.icss)",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "icss",
+        "aliases": ["Indented CSS", "icss"],
+        "extensions": [".icss"],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/icss.svg",
+          "dark": "./icons/icss.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "icss",
+        "scopeName": "source.icss",
+        "path": "./syntaxes/icss.tmLanguage.json"
+      }
+    ]
+  }
+}

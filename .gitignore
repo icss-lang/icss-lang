@@ -1,0 +1,28 @@
+# Rust
+target/
+
+# Node
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Mac
+.DS_Store
+
+# VS Code Extension
+vscode/out/
+vscode/node_modules/
+vscode/.vscode-test/
+vscode/*.vsix
+
+# Wasm-pack
+pkg/
+
+# Environment
+.env
+.env.local
+
+# vscode extension
+*.vsix

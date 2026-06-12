@@ -1,0 +1,16 @@
+.main-container
+  display: flex
+  flex-direction: column
+  padding: 20px
+
+  .child-element
+    color: red
+    margin-top: 10px
+
+    &:hover
+      color: blue
+      background: yellow
+
+@media (max-width: 800px)
+  .main-container
+    padding: 10px

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Indented CSS",
+  "scopeName": "source.icss",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#at_rules"
+    },
+    {
+      "include": "#properties"
+    },
+    {
+      "include": "#selectors"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.icss",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.icss",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "at_rules": {
+      "match": "^\\s*(@[a-zA-Z0-9_-]+)\\s*(.*)$",
+      "captures": {
+        "1": {
+          "name": "keyword.control.at-rule.icss"
+        },
+        "2": {
+          "name": "string.unquoted.icss"
+        }
+      }
+    },
+    "properties": {
+      "match": "^(\\s*)([a-zA-Z0-9_-]+)\\s*:\\s*(.*)$",
+      "captures": {
+        "2": {
+          "name": "support.type.property-name.icss"
+        },
+        "3": {
+          "patterns": [
+            {
+              "match": "#[0-9a-fA-F]{3,8}",
+              "name": "constant.other.color.rgb-value.icss"
+            },
+            {
+              "match": "\\b([0-9]+(?:\\.[0-9]+)?)(px|em|rem|%|vh|vw|s|ms|deg)\\b",
+              "captures": {
+                "1": { "name": "constant.numeric.icss" },
+                "2": { "name": "keyword.other.unit.icss" }
+              }
+            },
+            {
+              "match": "\\b(red|blue|green|yellow|white|black|transparent|var|rgba|rgb|hsl|hsla)\\b",
+              "name": "support.constant.color.icss"
+            }
+          ]
+        }
+      }
+    },
+    "selectors": {
+      "match": "^\\s*([.#&\\[:]?[a-zA-Z0-9_\\-:\\s>.+~]+)$",
+      "name": "entity.name.tag.css.icss"
+    }
+  }
+}
