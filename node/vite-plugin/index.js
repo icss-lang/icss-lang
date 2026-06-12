@@ -5,7 +5,7 @@ export function indentedCSS() {
     name: 'vite-plugin-icss',
     enforce: 'pre',
     transform(src, id) {
-      if (id.endsWith('.icss')) {
+      if (id.endsWith('.icss') || id.endsWith('.cssi')) {
         try {
           const css = compile_icss(src);
           // Return a JS module that dynamically injects the compiled CSS

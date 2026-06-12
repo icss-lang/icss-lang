@@ -21,7 +21,8 @@
           "icss"
         ],
         "extensions": [
-          ".icss"
+          ".icss",
+          ".cssi"
         ],
         "configuration": "./language-configuration.json",
         "icon": {
