@@ -9,10 +9,23 @@ export function icss() {
     name: 'vite-plugin-icss',
     enforce: 'pre',
     transform(src, id) {
+      // --- Vue / Svelte style block mode ---
+      const isVueOrSvelteStyle = (id.includes('?vue') || id.includes('?svelte')) && 
+                                 id.includes('type=style') && 
+                                 (id.includes('lang.icss') || id.includes('lang.cssi'));
+      
       // --- File mode: .icss / .cssi imports ---
-      if (id.endsWith('.icss') || id.endsWith('.cssi')) {
+      const isIcssFile = id.endsWith('.icss') || id.endsWith('.cssi');
+
+      if (isVueOrSvelteStyle || isIcssFile) {
         try {
           const css = compile_icss(src);
+          
+          if (isVueOrSvelteStyle) {
+            // Vue and Svelte compilers expect raw CSS from the style block
+            return { code: css, map: null };
+          }
+
           // Return a JS module that dynamically injects the compiled CSS
           const code = `
             if (typeof document !== 'undefined') {

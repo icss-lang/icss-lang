@@ -1,0 +1,65 @@
+{
+  "$schema": "../schemas/tmlanguage.json",
+  "scopeName": "source.icss.html.injection",
+  "injectionSelector": "L:text.html.basic, L:text.html.vue, L:source.svelte",
+  "patterns": [
+    {
+      "begin": "(?i)(<)(style)(?=\\s|>)(?=[^>]*?\\b(?:type|lang)\\s*=\\s*(['\"])(?:text/)?(?:icss|cssi)\\3)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.html" },
+        "2": { "name": "entity.name.tag.style.html" }
+      },
+      "end": "(?i)(</)(style)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.html" },
+        "2": { "name": "entity.name.tag.style.html" },
+        "3": { "name": "punctuation.definition.tag.end.html" }
+      },
+      "patterns": [
+        {
+          "begin": "\\G",
+          "end": "(>)",
+          "endCaptures": {
+            "1": { "name": "punctuation.definition.tag.end.html" }
+          },
+          "patterns": [
+            {
+              "match": "\\b([a-zA-Z0-9\\-:]+)\\s*(=)\\s*(\")([^\"]*)(\")",
+              "captures": {
+                "1": { "name": "entity.other.attribute-name.html" },
+                "2": { "name": "punctuation.separator.key-value.html" },
+                "3": { "name": "punctuation.definition.string.begin.html" },
+                "4": { "name": "string.quoted.double.html" },
+                "5": { "name": "punctuation.definition.string.end.html" }
+              }
+            },
+            {
+              "match": "\\b([a-zA-Z0-9\\-:]+)\\s*(=)\\s*(')([^']*)(')",
+              "captures": {
+                "1": { "name": "entity.other.attribute-name.html" },
+                "2": { "name": "punctuation.separator.key-value.html" },
+                "3": { "name": "punctuation.definition.string.begin.html" },
+                "4": { "name": "string.quoted.single.html" },
+                "5": { "name": "punctuation.definition.string.end.html" }
+              }
+            },
+            {
+              "match": "\\b([a-zA-Z0-9\\-:]+)",
+              "name": "entity.other.attribute-name.html"
+            }
+          ]
+        },
+        {
+          "begin": "(?<=>)",
+          "end": "(?=</(?i:style)>)",
+          "contentName": "source.icss",
+          "patterns": [
+            {
+              "include": "source.icss"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

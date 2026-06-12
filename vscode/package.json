@@ -46,6 +46,18 @@
           "source.ts",
           "source.tsx"
         ]
+      },
+      {
+        "scopeName": "source.icss.html.injection",
+        "path": "./syntaxes/icss.html.injection.tmLanguage.json",
+        "injectTo": [
+          "text.html.basic",
+          "text.html.vue",
+          "source.svelte"
+        ],
+        "embeddedLanguages": {
+          "source.icss": "icss"
+        }
       }
     ]
   }

@@ -16,14 +16,14 @@ checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 
 [[package]]
 name = "icss-lang"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "wasm-bindgen",
 ]
 
 [[package]]
 name = "icss-node-wrapper"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "icss-lang",
  "wasm-bindgen",
