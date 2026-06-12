@@ -7,6 +7,19 @@ set -e
 VERSION_LEVEL="${VERSION_LEVEL:-patch}"
 DEFAULT_PROJECTS="icss-rs node/icss-lang node/vite-plugin vscode"
 PROJECTS="${PROJECTS:-$DEFAULT_PROJECTS}"
+DRY_RUN=false
+
+# Parse arguments
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run)
+      DRY_RUN=true
+      ;;
+    *)
+      # Ignore other arguments
+      ;;
+  esac
+done
 
 # Validate VERSION_LEVEL
 if [[ "$VERSION_LEVEL" != "major" && "$VERSION_LEVEL" != "minor" && "$VERSION_LEVEL" != "patch" ]]; then
@@ -49,6 +62,9 @@ read_cargo_version() {
 write_cargo_version() {
   local file=$1
   local new_ver=$2
+  if [ "$DRY_RUN" = "true" ]; then
+    return
+  fi
   node -e '
     const fs = require("fs");
     const content = fs.readFileSync(process.argv[1], "utf8");
@@ -67,6 +83,9 @@ read_npm_version() {
 write_npm_version() {
   local file=$1
   local new_ver=$2
+  if [ "$DRY_RUN" = "true" ]; then
+    return
+  fi
   node -e '
     const fs = require("fs");
     const content = fs.readFileSync(process.argv[1], "utf8");
@@ -86,6 +105,15 @@ should_bump() {
   return 1
 }
 
+# Change tracker for the summary
+SUMMARY=""
+add_summary() {
+  SUMMARY="${SUMMARY}\n$1"
+}
+
+if [ "$DRY_RUN" = "true" ]; then
+  echo "=== DRY RUN (No files will be modified) ==="
+fi
 echo "Version level: $VERSION_LEVEL"
 echo "Projects to update: $PROJECTS"
 echo "----------------------------------------"
@@ -96,18 +124,22 @@ if should_bump "icss-rs"; then
   OLD_VER=$(read_cargo_version "$CARGO_FILE")
   NEW_VER=$(increment_version "$OLD_VER" "$VERSION_LEVEL")
   echo "Bumping icss-rs: $OLD_VER -> $NEW_VER"
+  add_summary "  - icss-rs: $OLD_VER -> $NEW_VER"
   write_cargo_version "$CARGO_FILE" "$NEW_VER"
   
   # Update dependency in node/icss-lang/Cargo.toml
   WRAPPER_CARGO="node/icss-lang/Cargo.toml"
   if [ -f "$WRAPPER_CARGO" ]; then
     echo "  Updating dependency reference icss-lang -> $NEW_VER in $WRAPPER_CARGO"
-    node -e '
-      const fs = require("fs");
-      const content = fs.readFileSync(process.argv[1], "utf8");
-      const updated = content.replace(/(icss-lang\s*=\s*\{\s*path\s*=\s*"[^"]+"\s*,\s*version\s*=\s*")[^"]+("\s*\})/, "$1" + process.argv[2] + "$2");
-      fs.writeFileSync(process.argv[1], updated);
-    ' "$WRAPPER_CARGO" "$NEW_VER"
+    add_summary "    ↳ node/icss-lang dependency: icss-lang -> $NEW_VER"
+    if [ "$DRY_RUN" != "true" ]; then
+      node -e '
+        const fs = require("fs");
+        const content = fs.readFileSync(process.argv[1], "utf8");
+        const updated = content.replace(/(icss-lang\s*=\s*\{\s*path\s*=\s*"[^"]+"\s*,\s*version\s*=\s*")[^"]+("\s*\})/, "$1" + process.argv[2] + "$2");
+        fs.writeFileSync(process.argv[1], updated);
+      ' "$WRAPPER_CARGO" "$NEW_VER"
+    fi
   fi
 fi
 
@@ -120,6 +152,7 @@ if should_bump "node/icss-lang"; then
   OLD_VER=$(read_npm_version "$NPM_FILE")
   NEW_VER=$(increment_version "$OLD_VER" "$VERSION_LEVEL")
   echo "Bumping node/icss-lang (npm): $OLD_VER -> $NEW_VER"
+  add_summary "  - node/icss-lang (npm): $OLD_VER -> $NEW_VER"
   write_npm_version "$NPM_FILE" "$NEW_VER"
   
   # Also keep the wrapper Cargo.toml version in sync
@@ -127,6 +160,7 @@ if should_bump "node/icss-lang"; then
     OLD_CARGO_VER=$(read_cargo_version "$CARGO_FILE")
     NEW_CARGO_VER=$(increment_version "$OLD_CARGO_VER" "$VERSION_LEVEL")
     echo "  Syncing Cargo.toml version for wrapper: $OLD_CARGO_VER -> $NEW_CARGO_VER"
+    add_summary "    ↳ node/icss-lang wrapper (Cargo.toml): $OLD_CARGO_VER -> $NEW_CARGO_VER"
     write_cargo_version "$CARGO_FILE" "$NEW_CARGO_VER"
   fi
   
@@ -134,12 +168,15 @@ if should_bump "node/icss-lang"; then
   VITE_PKG="node/vite-plugin/package.json"
   if [ -f "$VITE_PKG" ]; then
     echo "  Updating dependency reference @icss-lang/node -> ^$NEW_VER in $VITE_PKG"
-    node -e '
-      const fs = require("fs");
-      const content = fs.readFileSync(process.argv[1], "utf8");
-      const updated = content.replace(/"@icss-lang\/node"\s*:\s*"[^"]+"/, "\"@icss-lang/node\": \"^" + process.argv[2] + "\"");
-      fs.writeFileSync(process.argv[1], updated);
-    ' "$VITE_PKG" "$NEW_VER"
+    add_summary "    ↳ node/vite-plugin dependency: @icss-lang/node -> ^$NEW_VER"
+    if [ "$DRY_RUN" != "true" ]; then
+      node -e '
+        const fs = require("fs");
+        const content = fs.readFileSync(process.argv[1], "utf8");
+        const updated = content.replace(/"@icss-lang\/node"\s*:\s*"[^"]+"/, "\"@icss-lang/node\": \"^" + process.argv[2] + "\"");
+        fs.writeFileSync(process.argv[1], updated);
+      ' "$VITE_PKG" "$NEW_VER"
+    fi
   fi
 fi
 
@@ -149,6 +186,7 @@ if should_bump "node/vite-plugin"; then
   OLD_VER=$(read_npm_version "$NPM_FILE")
   NEW_VER=$(increment_version "$OLD_VER" "$VERSION_LEVEL")
   echo "Bumping node/vite-plugin: $OLD_VER -> $NEW_VER"
+  add_summary "  - node/vite-plugin: $OLD_VER -> $NEW_VER"
   write_npm_version "$NPM_FILE" "$NEW_VER"
 fi
 
@@ -158,8 +196,17 @@ if should_bump "vscode"; then
   OLD_VER=$(read_npm_version "$NPM_FILE")
   NEW_VER=$(increment_version "$OLD_VER" "$VERSION_LEVEL")
   echo "Bumping vscode: $OLD_VER -> $NEW_VER"
+  add_summary "  - vscode: $OLD_VER -> $NEW_VER"
   write_npm_version "$NPM_FILE" "$NEW_VER"
 fi
 
 echo "----------------------------------------"
-echo "Version increase completed successfully!"
+if [ "$DRY_RUN" = "true" ]; then
+  echo -e "Dry run summary of changes:$SUMMARY"
+  echo "----------------------------------------"
+  echo "Dry run completed. No files were modified."
+else
+  echo -e "Summary of changes made:$SUMMARY"
+  echo "----------------------------------------"
+  echo "Version increase completed successfully!"
+fi
