@@ -14,6 +14,9 @@
     },
     {
       "include": "#selectors"
+    },
+    {
+      "include": "#templateLiterals"
     }
   ],
   "repository": {
@@ -69,8 +72,25 @@
       }
     },
     "selectors": {
-      "match": "^\\s*([.#&\\[:]?[a-zA-Z0-9_\\-:\\s>.+~]+)$",
+      "match": "^\\s*([.#&\\[:]?[a-zA-Z0-9_\\-:\\s\\>.+~]+)$",
       "name": "entity.name.tag.css.icss"
+    },
+    "templateLiterals": {
+      "patterns": [
+        {
+          "name": "string.template.icss",
+          "begin": "(icss|cssi)`",
+          "beginCaptures": { "0": { "name": "punctuation.definition.template.begin.icss" } },
+          "end": "`",
+          "endCaptures": { "0": { "name": "punctuation.definition.template.end.icss" } },
+          "patterns": [
+            { "include": "#properties" },
+            { "include": "#selectors" },
+            { "include": "#at_rules" },
+            { "include": "#comments" }
+          ]
+        }
+      ]
     }
   }
 }
