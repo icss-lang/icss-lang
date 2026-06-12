@@ -1,5 +1,5 @@
 {
-  "name": "vite-plugin-icss",
+  "name": "@icss-lang/vite-plugin",
   "version": "1.0.0",
   "type": "module",
   "description": "",
@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "icss-lang": "^0.1.0"
+    "@icss-lang/node": "^0.1.0"
   },
   "devDependencies": {
     "vitest": "^4.1.8"

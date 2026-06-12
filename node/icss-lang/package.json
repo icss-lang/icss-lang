@@ -1,13 +1,24 @@
 {
-  "name": "icss-lang",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@icss-lang/node",
+  "version": "0.1.0",
+  "description": "Indented CSS parser and compiler for Node.js",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "./scripts/wasm-build.sh",
+    "test": "vitest run",
+    "prebuild": "npm run test",
+    "build": "echo \"Build complete\"",
+    "prepack": "npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+  "keywords": [
+    "css",
+    "indented-css"
+  ],
+  "author": "Jesús Germade",
+  "license": "MIT",
+  "devDependencies": {
+    "vitest": "^4.1.8"
+  }
 }

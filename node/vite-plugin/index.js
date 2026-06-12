@@ -1,4 +1,4 @@
-import { compile_icss } from 'icss-lang';
+import { compile_icss } from '@icss-lang/node';
 
 export default function indentedCSS() {
   return {

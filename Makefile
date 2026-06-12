@@ -18,6 +18,13 @@ icss-rs.wasm:
 icss-language.vsix:
 	cd vscode && npx vsce package
 
-vite-plugin.test:
+node/vite-plugin.test:
 	cd node/vite-plugin && npm test
+
+node/icss-lang.test:
+	cd node/icss-lang && npm test
+
+node/icss-lang.build:
+	cd node/icss-lang && npm run build
+
 
