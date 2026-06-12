@@ -31,7 +31,7 @@ If you are using TypeScript and importing `.icss` or `.cssi` files directly in y
 To fix this, you can reference the types provided by this plugin. Add the following to your `vite-env.d.ts` or `app.d.ts`:
 
 ```typescript
-/// <reference types="@icss-lang/vite-plugin/client" />
+/// <reference types="@icss-lang/icss-lang" />
 ```
 
 Alternatively, you can manually declare the modules in your project's `d.ts` files:
