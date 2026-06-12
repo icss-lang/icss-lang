@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "pretest": "./scripts/wasm-build.sh",
-    "test": "vitest run",
+    "test": "vitest run && ./scripts/test-pkg.sh",
     "prebuild": "npm run test",
     "build": "echo \"Build complete\"",
     "prepack": "npm run build"

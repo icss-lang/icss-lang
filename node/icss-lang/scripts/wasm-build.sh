@@ -43,4 +43,7 @@ else
     exit 1
 fi
 
+# Remove pkg/.gitignore so npm pack includes the pkg/ directory
+rm -f pkg/.gitignore
+
 echo "Build complete! The pkg/ directory is ready."
