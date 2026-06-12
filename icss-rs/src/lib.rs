@@ -1,9 +1,24 @@
 use std::fmt::Write;
 use wasm_bindgen::prelude::*;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum IndentType {
+    Spaces,
+    Tabs,
+}
+
 #[wasm_bindgen]
-pub fn compile_icss(input: &str) -> Result<String, String> {
-    Compiler::compile(input)
+pub fn compile_icss(
+    input: &str,
+    indent_type: Option<String>,
+    indent_size: Option<usize>,
+) -> Result<String, String> {
+    let type_enum = match indent_type.as_deref() {
+        Some("tabs") | Some("tab") => IndentType::Tabs,
+        _ => IndentType::Spaces,
+    };
+    let size = indent_size.unwrap_or(2);
+    Compiler::compile_with_options(input, type_enum, size)
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -28,9 +43,18 @@ pub struct Compiler;
 impl Compiler {
     /// Compiles an `.icss` string into standard CSS
     pub fn compile(input: &str) -> Result<String, String> {
+        Self::compile_with_options(input, IndentType::Spaces, 2)
+    }
+
+    /// Compiles an `.icss` string into standard CSS with custom indentation
+    pub fn compile_with_options(
+        input: &str,
+        indent_type: IndentType,
+        indent_size: usize,
+    ) -> Result<String, String> {
         let lines = Self::lex(input);
         let ast = Self::parse_ast(&lines)?;
-        Ok(Self::render(&ast))
+        Ok(Self::render(&ast, indent_type, indent_size))
     }
 
     /// Step 1: Lex into lines with indentation levels
@@ -148,14 +172,19 @@ impl Compiler {
     }
 
     /// Step 3: Render AST to standard CSS
-    fn render(nodes: &[Node]) -> String {
+    fn render(nodes: &[Node], indent_type: IndentType, indent_size: usize) -> String {
         let mut output = String::new();
-        Self::render_nodes(nodes, &mut output, 0);
+        let indent_char = match indent_type {
+            IndentType::Spaces => " ",
+            IndentType::Tabs => "\t",
+        };
+        let indent_str = indent_char.repeat(indent_size);
+        Self::render_nodes(nodes, &mut output, 0, &indent_str);
         output
     }
 
-    fn render_nodes(nodes: &[Node], output: &mut String, depth: usize) {
-        let indent = "  ".repeat(depth);
+    fn render_nodes(nodes: &[Node], output: &mut String, depth: usize, indent_str: &str) {
+        let indent = indent_str.repeat(depth);
         
         for node in nodes {
             match node {
@@ -164,12 +193,12 @@ impl Compiler {
                 }
                 Node::Selector { name, children } => {
                     writeln!(output, "{}{} {{", indent, name).unwrap();
-                    Self::render_nodes(children, output, depth + 1);
+                    Self::render_nodes(children, output, depth + 1, indent_str);
                     writeln!(output, "{}}}", indent).unwrap();
                 }
                 Node::AtRule { name, children } => {
                     writeln!(output, "{}{} {{", indent, name).unwrap();
-                    Self::render_nodes(children, output, depth + 1);
+                    Self::render_nodes(children, output, depth + 1, indent_str);
                     writeln!(output, "{}}}", indent).unwrap();
                 }
             }
@@ -207,5 +236,24 @@ mod tests {
         let result = Compiler::compile(input).unwrap();
         let expected = "@media (max-width: 600px) {\n  .container {\n    padding: 10px;\n  }\n}\n";
         assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_custom_indentation() {
+        let input = "
+.button
+  color: red
+        ";
+        // Default spaces:2
+        let result_default = Compiler::compile(input).unwrap();
+        assert_eq!(result_default, ".button {\n  color: red;\n}\n");
+
+        // Spaces: 4
+        let result_spaces_4 = Compiler::compile_with_options(input, IndentType::Spaces, 4).unwrap();
+        assert_eq!(result_spaces_4, ".button {\n    color: red;\n}\n");
+
+        // Tabs: 1
+        let result_tabs_1 = Compiler::compile_with_options(input, IndentType::Tabs, 1).unwrap();
+        assert_eq!(result_tabs_1, ".button {\n\tcolor: red;\n}\n");
     }
 }

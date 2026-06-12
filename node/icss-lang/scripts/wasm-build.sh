@@ -27,7 +27,8 @@ elif command -v docker &> /dev/null; then
     echo "rustup not found. Falling back to Docker for a system-independent build..."
     
     # We use a Rust image, install wasm-pack, and build it inside the container
-    docker run --rm -v "$(pwd):/app" -w /app rust:latest bash -c "
+    REPO_ROOT="$(cd ../.. && pwd)"
+    docker run --rm -v "$REPO_ROOT:/workspace" -w /workspace/node/icss-lang rust:latest bash -c "
         echo 'Installing wasm-pack inside container...'
         cargo install wasm-pack
         echo 'Building with wasm-pack...'
