@@ -16,7 +16,7 @@ describe('vite-plugin-icss', () => {
 
   it('should transform .cssi files', () => {
     const plugin = indentedCSS();
-    const src = `
+    const src = icss`
 body
   color: red
   background: blue
@@ -29,7 +29,7 @@ body
 
   it('should transform .icss files', () => {
     const plugin = indentedCSS();
-    const src = `
+    const src = cssi`
 body
   color: red
   background: blue
@@ -45,7 +45,7 @@ body
 
   it('should transform icss tagged template literals in .js files', () => {
     const plugin = indentedCSS();
-    const src = `
+    const src = icss`
 import { icss } from '@icss-lang/vite-plugin/client';
 const css = icss\`
 body
@@ -63,7 +63,7 @@ body
 
   it('should transform icss tagged template literals in .ts files', () => {
     const plugin = indentedCSS();
-    const src = `const css = icss\`body\n  color: red\n\`;`;
+    const src = icss`const css = icss\`body\n  color: red\n\`;`;
     const result = plugin.transform(src, 'component.ts');
     expect(result).toBeDefined();
     expect(result.code).toContain('color: red;');
@@ -72,7 +72,7 @@ body
 
   it('should leave JS files without icss template literals untouched', () => {
     const plugin = indentedCSS();
-    const src = `const x = 42;`;
+    const src = icss`const x = 42;`;
     const result = plugin.transform(src, 'util.js');
     expect(result).toBeUndefined();
   });
@@ -92,7 +92,7 @@ body
 
   it('should transform cssi tagged template literals', () => {
     const plugin = indentedCSS();
-    const src = `const css = cssi\`body\n  color: blue\n\`;`;
+    const src = icss`const css = cssi\`body\n  color: blue\n\`;`;
     const result = plugin.transform(src, 'component.js');
     expect(result).toBeDefined();
     expect(result.code).toContain('color: blue;');

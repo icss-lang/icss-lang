@@ -36,6 +36,16 @@
         "language": "icss",
         "scopeName": "source.icss",
         "path": "./syntaxes/icss.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.icss.injection",
+        "path": "./syntaxes/icss.injection.tmLanguage.json",
+        "injectTo": [
+          "source.js",
+          "source.jsx",
+          "source.ts",
+          "source.tsx"
+        ]
       }
     ]
   }

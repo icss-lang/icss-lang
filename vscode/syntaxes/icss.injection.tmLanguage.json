@@ -1,0 +1,52 @@
+{
+  "$schema": "../schemas/tmlanguage.json",
+  "scopeName": "source.icss.injection",
+  "injectionSelector": "L:source.js, L:source.jsx, L:source.ts, L:source.tsx",
+  "patterns": [
+    {
+      "include": "#icssTaggedTemplate"
+    }
+  ],
+  "repository": {
+    "icssTaggedTemplate": {
+      "name": "string.template.icss",
+      "begin": "\\b(icss|cssi)(`)",
+      "beginCaptures": {
+        "1": { "name": "entity.name.tag.icss" },
+        "2": { "name": "punctuation.definition.template.begin.icss" }
+      },
+      "end": "(`)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.template.end.icss" }
+      },
+      "patterns": [
+        {
+          "include": "source.icss#comments"
+        },
+        {
+          "include": "source.icss#at_rules"
+        },
+        {
+          "include": "source.icss#properties"
+        },
+        {
+          "include": "source.icss#selectors"
+        },
+        {
+          "name": "meta.template.expression.js",
+          "begin": "\\$\\{",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.template-expression.begin.js" }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.template-expression.end.js" }
+          },
+          "patterns": [
+            { "include": "source.js" }
+          ]
+        }
+      ]
+    }
+  }
+}

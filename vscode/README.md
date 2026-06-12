@@ -20,3 +20,16 @@ To package the extension into a `.vsix` file for distribution or manual installa
 ```bash
 npx vsce package
 ```
+
+## Usage
+
+```icss
+body
+  color: red
+```
+
+```css
+body {
+  color: red;
+}
+```
