@@ -28,3 +28,5 @@ node/icss-lang.build:
 	cd node/icss-lang && npm run build
 
 
+vscode.icons:
+	cd vscode && ./generate-icons-fromsvg.sh
