@@ -21,7 +21,6 @@ vscode/*.vsix
 pkg/
 
 # Environment
-.env
 .env.local
 
 # vscode extension

@@ -4,6 +4,14 @@ set -e
 # Navigate to the root of the icss-lang package (parent of scripts/)
 cd "$(dirname "$0")/.."
 
+# Skip recursive package packaging check during npm publish/pack lifecycle
+if [[ -n "$npm_lifecycle_event" ]]; then
+    if [[ "$npm_lifecycle_event" == *"pack"* || "$npm_lifecycle_event" == *"publish"* ]]; then
+        echo "Skipping recursive package verification during npm pack/publish lifecycle."
+        exit 0
+    fi
+fi
+
 echo "Testing package generation..."
 
 # Create a temporary directory inside the workspace to avoid OS differences in mktemp
@@ -19,7 +27,7 @@ trap cleanup EXIT
 
 # Run npm pack into the temporary directory
 echo "Running npm pack..."
-npm pack --ignore-scripts --pack-destination "$TEMP_DIR"
+npm_config_dry_run=false npm pack --ignore-scripts --pack-destination "$TEMP_DIR"
 
 # Locate the generated tarball
 TARBALL=$(find "$TEMP_DIR" -name "*.tgz" | head -n 1)
