@@ -19,7 +19,7 @@ trap cleanup EXIT
 
 # Run npm pack into the temporary directory
 echo "Running npm pack..."
-npm pack --pack-destination "$TEMP_DIR"
+npm pack --ignore-scripts --pack-destination "$TEMP_DIR"
 
 # Locate the generated tarball
 TARBALL=$(find "$TEMP_DIR" -name "*.tgz" | head -n 1)
