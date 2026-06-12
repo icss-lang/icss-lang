@@ -1,6 +1,6 @@
 <div align="center">
   <img src="./vscode/icons/icss-new.svg" alt="Indented CSS Logo" width="128" height="128" />
-  <h1>Indented CSS</h1>
+  <h1>indented CSS</h1>
   <p>A modern, lightweight, indentation-based syntax for CSS compiled with high-performance Rust.</p>
 
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
